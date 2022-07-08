@@ -75,12 +75,14 @@ disconnect() {
 status() {
     # Echo the status.
 
-    local status
-    status="$(nordvpn status | tr -d '\r -')"
+    local status status="$(nordvpn status)"
     if [ -n "${status##*Connected*}" ]; then
-        printf "Off"
+        printf "Disconnected"
     else
-        printf "%s" "$(printf "%s" "$status" | grep "City" | cut -d ":" -f 2)"
+      country="$(printf "%s" "$status" | sed -n 's/^Country: //p')"
+      flag="$(cat ./countries.json | jq -r --arg country "$country" '.[] | select
+      (.name==$country) | .emoji')"
+      printf "Connected  %s" "$flag"
     fi
 }
 
