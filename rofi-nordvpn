@@ -80,7 +80,7 @@ status() {
         printf "Disconnected"
     else
       country="$(printf "%s" "$status" | sed -n 's/^Country: //p')"
-      flag="$(cat ./countries.json | jq -r --arg country "$country" '.[] | select
+      flag="$(cat ${BASH_SOURCE%/*}/countries.json | jq -r --arg country "$country" '.[] | select
       (.name==$country) | .emoji')"
       printf "Connected  %s" "$flag"
     fi
